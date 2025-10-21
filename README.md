@@ -303,7 +303,3 @@ Contributions welcome! Please:
 - fast.ai for the ImageNette dataset
 - PyTorch team for excellent deep learning framework
 - UCSD DSC291 Fall 2025 course staff
-
----
-
-**For questions or issues, please open a GitHub issue or contact the course staff.**

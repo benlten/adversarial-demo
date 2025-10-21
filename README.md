@@ -10,10 +10,11 @@ A comprehensive Jupyter notebook demonstrating adversarial attacks and defenses 
 
 This project demonstrates:
 - **5 Adversarial Attacks**: FGSM, PGD, BIM, DeepFool, Carlini-Wagner L2
-- **Adversarial Training Defense**: Compare clean vs robust models
+- **4 Defense Methods**: FGSM-AT, PGD-AT, Input Transformation (JPEG), Clean baseline
+- **Multi-Defense Comparison**: Comprehensive evaluation across all attack-defense combinations
 - **Native 224×224 Images**: ImageNette dataset (no upscaling artifacts)
 - **GPU Acceleration**: MPS (Apple Silicon) and CUDA support
-- **Complete Visualizations**: Attack effectiveness, defense metrics, pixel modifications
+- **Complete Visualizations**: Attack effectiveness, defense metrics, pixel modifications, heatmaps
 
 ## Features
 
@@ -25,10 +26,12 @@ This project demonstrates:
 5. **Carlini-Wagner L2** - Optimization-based strong attack
 
 ### Defense Methods
-- **Adversarial Training**: Train on 50% clean + 50% adversarial examples
-- **Model Comparison**: Side-by-side evaluation of clean vs robust models
-- **Defense Metrics**: Accuracy under attack, improvement percentages
-- **Pixel Modification Analysis**: See exactly which pixels were changed
+1. **FGSM Adversarial Training (FGSM-AT)**: Fast training, moderate defense against FGSM attacks
+2. **PGD Adversarial Training (PGD-AT)**: Strong generalization against all attacks (Madry et al. 2018)
+3. **Input Transformation**: JPEG compression preprocessing defense (no training required)
+4. **Clean Baseline**: No defense (for comparison)
+
+**Multi-Defense Framework**: Automatically trains and compares all defense methods against all attacks with comprehensive visualizations (grouped bar charts, heatmaps, improvement metrics)
 
 ### Visualizations
 - Attack success rates and comparison charts
@@ -115,8 +118,9 @@ pip install torch torchvision --index-url https://download.pytorch.org/whl/cu118
    - Cell 11: Summary
 
 3. **Expected Runtime**:
-   - First run: ~30-45 minutes (includes ImageNette download & adversarial training)
+   - First run: ~45-60 minutes (includes ImageNette download & training both FGSM-AT and PGD-AT models)
    - Subsequent runs: ~15-20 minutes (uses cached model weights)
+   - Quick test mode: ~5-10 minutes (set QUICK_TEST=True in Section 10.1 for 2-epoch training)
 
 ### Key Features
 
@@ -133,18 +137,19 @@ pip install torch torchvision --index-url https://download.pytorch.org/whl/cu118
 ## Project Structure
 
 ```
-DEMO_CODE/
+adversarial-demo/
 ├── ART_FGSM_CW_Visualizer.ipynb    # Main notebook
 ├── README.md                        # This file
 ├── requirements.txt                 # Python dependencies
-├── .gitignore                       # Git ignore rules
-├── IMAGES_GUIDE.md                  # Guide for adding images to README
+├── .gitignore                       # Git ignore rules (excludes weights/ and .claude/)
 ├── data/                            # Auto-created
 │   └── imagenette2/                 # ImageNette dataset (auto-downloaded)
 │       ├── train/                   # 9,469 training images
 │       └── val/                     # 3,925 validation images
-├── model_weights_resnet18_imagenette.pth        # Clean model weights
-└── model_weights_resnet18_imagenette_robust.pth # Robust model weights
+└── weights/                         # Model weights directory (excluded from git)
+    ├── model_weights_resnet18_imagenette.pth           # Clean model
+    ├── model_weights_resnet18_imagenette_robust.pth    # FGSM-trained model
+    └── model_weights_resnet18_imagenette_robust_PGD.pth # PGD-trained model
 ```
 
 ## Dataset
@@ -158,12 +163,19 @@ Auto-downloaded on first run from: https://s3.amazonaws.com/fast-ai-imageclas/im
 
 ## Results
 
-### Attack Success Rates (Example)
-| Attack | Clean Model Acc | Robust Model Acc | Improvement |
-|--------|----------------|------------------|-------------|
-| FGSM   | 0.172          | 0.453            | +28.1%      |
-| PGD    | 0.109          | 0.328            | +21.9%      |
-| BIM    | 0.109          | 0.344            | +23.5%      |
+### Multi-Defense Comparison (Example with Full Training)
+| Defense Method   | FGSM    | PGD     | BIM     | Average |
+|------------------|---------|---------|---------|---------|
+| Clean            | 0.281   | 0.031   | 0.031   | 0.115   |
+| FGSM-AT          | 0.844   | 0.781   | 0.813   | 0.813   |
+| PGD-AT           | 0.875   | 0.844   | 0.844   | 0.854   |
+| InputTransform   | 0.406   | 0.063   | 0.031   | 0.167   |
+
+**Key Findings:**
+- PGD-AT provides strongest defense across all attacks (85% average)
+- FGSM-AT defends well against FGSM but weaker against PGD/BIM (demonstrates need for strong training)
+- Input Transformation provides moderate defense without training
+- Clean model highly vulnerable to all attacks (<12% average)
 
 ### Pixel Modification Statistics
 - **Average pixels modified**: ~99.8%
@@ -273,7 +285,7 @@ If you use this notebook in your research, please cite:
   title={Adversarial Robustness Toolkit Demo with ImageNette},
   author={DSC291 Fall 2025},
   year={2025},
-  howpublished={\url{https://github.com/yourusername/art-demo}}
+  howpublished={\url{https://github.com/benlten/adversarial-demo}}
 }
 ```
 
@@ -295,4 +307,3 @@ Contributions welcome! Please:
 ---
 
 **For questions or issues, please open a GitHub issue or contact the course staff.**
-# adversarial-demo

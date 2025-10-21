@@ -219,9 +219,8 @@ The notebook generates several key visualizations:
 - Model weight caching: Skip retraining on subsequent runs
 - Adversarial training: 2,000 images × 20 epochs (~5-10 minutes)
 
-### Image Quality
-- **Before**: CIFAR-10 (32×32) upscaled to 224×224 → blurry
-- **After**: ImageNette native ~500×375 downscaled to 224×224 → sharp!
+### Image Dataset
+ImageNette native ~500×375 downscaled to 224×224 
 
 ## Requirements
 

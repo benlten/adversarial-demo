@@ -289,14 +289,6 @@ If you use this notebook in your research, please cite:
 }
 ```
 
-## Contributing
-
-Contributions welcome! Please:
-1. Fork the repository
-2. Create a feature branch
-3. Add tests if applicable
-4. Submit a pull request
-
 ## Acknowledgments
 
 - IBM Research for the Adversarial Robustness Toolbox
